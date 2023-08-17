@@ -18,16 +18,16 @@
       - name: 'Cria o banco de dados MySQL'
         mysql_db:
           name:
-          - wordpress_db
+          - "{{ wp_db_name }}"
           login_user: root
           state: present
 
       - name: 'Criar o usuário do MySQL'
         mysql_user: 
           login_user: root
-          name: wordpress_user
+          name: "{{ wp_user_name }}"
           password: 12345
-          priv: 'wordpress_db.*:ALL'
+          priv: "{{ wp_db_name }}.*:ALL"
           state: present
           host: "{{ item }}"
         with_items:
@@ -88,8 +88,8 @@
           regexp: "{{ item.regex }}" 
           replace: "{{ item.value }}" 
         with_items:
-          - {regex: 'database_name_here', value: 'wordpress_db'}
-          - {regex: 'username_here', value: 'wordpress_user'}
+          - {regex: 'database_name_here', value: "{{ wp_db_name }}"}
+          - {regex: 'username_here', value: "{{ wp_user_name }}"}
           - {regex: 'password_here', value: '12345'}
           - {regex: 'localhost', value: '172.17.177.42'}
         become: yes
